@@ -1,0 +1,49 @@
+<div class="auth-container">
+  <h2>Create an Account</h2>
+
+  <div *ngIf="errorMessage" class="global-error">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input id="username" type="text" formControlName="username" placeholder="Enter username">
+      <div class="error" *ngIf="backendErrors['username']">
+        {{ backendErrors['username'] }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input id="fullName" type="text" formControlName="fullName" placeholder="Enter full name">
+      <div class="error" *ngIf="backendErrors['fullName']">
+        {{ backendErrors['fullName'] }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" placeholder="name@example.com">
+      <div class="error" *ngIf="registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched">
+        Please enter a valid email address.
+      </div>
+      <div class="error" *ngIf="backendErrors['email']">
+        {{ backendErrors['email'] }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" placeholder="Minimum 6 characters">
+      <div class="error" *ngIf="backendErrors['password']">
+        {{ backendErrors['password'] }}
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="registerForm.invalid">Register</button>
+  </form>
+
+  <p class="auth-footer">Already have an account? <a routerLink="/login">Log in here</a>.</p>
+</div>

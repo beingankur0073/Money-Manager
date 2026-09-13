@@ -1,0 +1,181 @@
+<div class="dashboard-wrapper">
+  <!-- Top Summary Metrics Banner -->
+  <header class="dashboard-header">
+    <div>
+      <h1>Financial Overview</h1>
+      <p class="subtitle">Monitor balances, track cash flows, and record journal entries</p>
+    </div>
+  </header>
+
+  <!-- Status Alerts -->
+  <div *ngIf="successMessage" class="banner-alert banner-success">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+    <span>{{ successMessage }}</span>
+  </div>
+  <div *ngIf="errorMessage" class="banner-alert banner-danger">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <!-- Accounts Section -->
+  <section class="content-card">
+    <div class="card-header">
+      <div>
+        <h2>Your Accounts</h2>
+        <span class="card-subtitle">Active debit, savings, and credit accounts</span>
+      </div>
+    </div>
+
+    <!-- Account Cards Grid -->
+    <div class="account-grid" *ngIf="accounts.length > 0; else emptyAccounts">
+      <div class="account-tile" *ngFor="let acc of accounts">
+        <div class="tile-top">
+          <span class="type-pill" [ngClass]="acc.accountType.toLowerCase()">{{ acc.accountType }}</span>
+          <span class="account-id">#{{ acc.id }}</span>
+        </div>
+        <div class="account-title">{{ acc.accountName }}</div>
+        <div class="account-balance">
+          {{ acc.balance | currency:(acc.currency || 'INR'):'symbol':'1.2-2' }}
+        </div>
+      </div>
+    </div>
+
+    <ng-template #emptyAccounts>
+      <div class="blank-notice">No active accounts detected. Create one below to begin transacting.</div>
+    </ng-template>
+
+    <!-- Create Account Form Strip -->
+    <div class="form-strip">
+      <h3>Add New Account</h3>
+      <form [formGroup]="accountForm" (ngSubmit)="onAddAccount()" class="form-row">
+        <div class="input-field">
+          <input type="text" formControlName="accountName" placeholder="Account Name (e.g., Salary Account)" />
+        </div>
+        <div class="input-field">
+          <select formControlName="accountType">
+            <option value="CHECKING">Checking / Current</option>
+            <option value="SAVINGS">Savings</option>
+            <option value="CREDIT_CARD">Credit Card</option>
+          </select>
+        </div>
+        <div class="input-field">
+          <input type="number" formControlName="initialBalance" placeholder="Opening Balance" step="0.01" />
+        </div>
+        <div class="input-field">
+          <select formControlName="currency">
+            <option value="INR">INR (₹)</option>
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+          </select>
+        </div>
+        <button type="submit" [disabled]="accountForm.invalid" class="btn btn-primary">
+          Add Account
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Post Transaction Section -->
+  <section class="content-card">
+    <div class="card-header">
+      <div>
+        <h2>Record Transaction</h2>
+        <span class="card-subtitle">Apply debits and credits against your accounts</span>
+      </div>
+    </div>
+
+    <form [formGroup]="transactionForm" (ngSubmit)="onAddTransaction()" class="transaction-grid-form">
+      <div class="field-item">
+        <label>Account</label>
+        <select formControlName="accountId">
+          <option value="" disabled selected>Choose Account</option>
+          <option *ngFor="let acc of accounts" [value]="acc.id">
+            {{ acc.accountName }} (Balance: {{ acc.balance | currency:(acc.currency || 'INR'):'symbol':'1.0-0' }})
+          </option>
+        </select>
+      </div>
+
+      <div class="field-item">
+        <label>Category</label>
+        <select formControlName="categoryId">
+          <option value="" disabled selected>Choose Category</option>
+          <option *ngFor="let cat of categories" [value]="cat.id">
+            {{ cat.name }} ({{ cat.type }})
+          </option>
+        </select>
+      </div>
+
+      <div class="field-item">
+        <label>Transaction Flow</label>
+        <select formControlName="transactionType">
+          <option value="DEBIT">Debit (Expense / Payment Out)</option>
+          <option value="CREDIT">Credit (Income / Deposit In)</option>
+        </select>
+      </div>
+
+      <div class="field-item">
+        <label>Amount (₹)</label>
+        <input type="number" formControlName="amount" placeholder="0.00" step="0.01" />
+      </div>
+
+      <div class="field-item full-width">
+        <label>Narration / Description</label>
+        <input type="text" formControlName="description" placeholder="e.g. Monthly Grocery Bill, Salary Credit" />
+      </div>
+
+      <div class="form-actions full-width">
+        <button type="submit" [disabled]="transactionForm.invalid" class="btn btn-accent">
+          Submit Transaction
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Transaction Ledger -->
+  <section class="content-card">
+    <div class="card-header">
+      <div>
+        <h2>Transaction Ledger</h2>
+        <span class="card-subtitle">Audited record of all account transactions</span>
+      </div>
+    </div>
+
+    <div class="table-container" *ngIf="transactions.length > 0; else emptyLedger">
+      <table class="data-table">
+        <thead>
+        <tr>
+          <th>Date & Time</th>
+          <th>Account</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th class="text-right">Amount</th>
+        </tr>
+        </thead><tbody>
+      <tr *ngFor="let tx of transactions">
+        <td class="date-col">{{ tx.transactionDate | date:'medium' }}</td>
+        <td class="font-medium">{{ tx.accountName || '-' }}</td>
+        <td><span class="category-tag">{{ tx.categoryName || '-' }}</span></td>
+        <td>{{ tx.description }}</td>
+        <td>
+              <span
+                class="badge"
+                [ngClass]="((tx.transactionType || tx.type || '')).toLowerCase()">
+                {{ tx.transactionType || tx.type }}
+              </span>
+        </td>
+        <td
+          class="text-right font-mono"
+          [ngClass]="(tx.transactionType || tx.type) === 'DEBIT' ? 'val-debit' : 'val-credit'">
+          {{ (tx.transactionType || tx.type) === 'DEBIT' ? '-' : '+' }}{{ tx.amount | currency:'INR':'symbol':'1.2-2' }}
+        </td>
+      </tr>
+      </tbody>
+      </table>
+    </div>
+
+    <ng-template #emptyLedger>
+      <div class="blank-notice">No transactions have been recorded yet.</div>
+    </ng-template>
+  </section>
+</div>

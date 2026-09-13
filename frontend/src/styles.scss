@@ -1,1 +1,117 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global CSS variables */
+:root {
+  --bank-blue: #071f34;
+  --bank-blue-deep: #030f1a;
+  --bank-red: #ef3b23;
+  --bank-red-dark: #a71e1f;
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.16);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.72);
+}
+
+/* Reset & root page styling */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bank-blue-deep);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Centered glowing red circle visible across all pages */
+body::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 480px;
+  height: 480px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--bank-red) 0%, var(--bank-red-dark) 45%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(65px);
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Subtle corner ambient depth to support the deep blue background */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 10% 20%, rgba(10, 49, 82, 0.75) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Navbar updated with modern glass blur and brand styling */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: rgba(10, 35, 60, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav-brand {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-actions a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-actions a.active,
+.nav-actions a:hover {
+  color: #ffffff;
+}
+
+.logout-btn {
+  width: auto;
+  margin: 0;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, var(--bank-red) 0%, var(--bank-red-dark) 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.logout-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
