@@ -4,7 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.bank.moneymanager.enums.TransactionType;
+import com.bank.moneymanager.enums.BillStatus;
+import com.bank.moneymanager.enums.BillingFrequency;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,17 +16,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionResponseDTO {
+public class RecurringBillResponseDTO {
     private Long id;
+    private String billerName;
     private Long accountId;
     private String accountName;
+    private String bankName;
     private Long categoryId;
     private String categoryName;
-    private Long recurringBillId;
-    private String recurringBillName;
     private BigDecimal amount;
-    private TransactionType transactionType;
-    private LocalDate transactionDate;
-    private String notes;
+    private BillingFrequency frequency;
+    private LocalDate nextDueDate;
+    private Boolean autoDebit;
+    private BillStatus status;
     private LocalDateTime createdAt;
 }

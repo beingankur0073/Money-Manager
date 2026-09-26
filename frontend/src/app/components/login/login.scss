@@ -111,6 +111,13 @@
   box-shadow: 0 4px 16px rgba(239, 59, 35, 0.35);
   transition: opacity 0.2s ease, transform 0.1s ease;
 
+  /* Flexbox settings for centering the loading spinner */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+
   &:hover:not(:disabled) {
     opacity: 0.92;
     transform: translateY(-1px);
@@ -124,6 +131,13 @@
     opacity: 0.45;
     cursor: not-allowed;
     box-shadow: none;
+  }
+
+  /* Angular Material Spinner override inside button */
+  ::ng-deep mat-spinner {
+    circle {
+      stroke: #ffffff !important;
+    }
   }
 }
 

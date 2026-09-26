@@ -45,4 +45,13 @@ public class AccountController {
         AccountResponseDTO account = accountService.getAccountById(id, principal.getId());
         return ResponseEntity.ok(account);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable Long id) {
+
+        accountService.deleteAccount(id, principal.getId());
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -31,6 +31,11 @@ public class Transaction extends BaseEntity {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    // NULLABLE: Linked if transaction was spawned from a recurring bill payment
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recurring_bill_id", nullable = true)
+    private RecurringBill recurringBill;
+
     @Column(name = "amount", nullable = false, precision = 19, scale = 4)
     private BigDecimal amount;
 

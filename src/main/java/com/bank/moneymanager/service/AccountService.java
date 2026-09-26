@@ -1,5 +1,10 @@
 package com.bank.moneymanager.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.bank.moneymanager.dto.AccountRequestDTO;
 import com.bank.moneymanager.dto.AccountResponseDTO;
 import com.bank.moneymanager.entity.Account;
@@ -7,11 +12,8 @@ import com.bank.moneymanager.entity.User;
 import com.bank.moneymanager.exception.ResourceNotFoundException;
 import com.bank.moneymanager.repository.AccountRepository;
 import com.bank.moneymanager.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,10 @@ public class AccountService {
         Account account = new Account();
         account.setUser(user);
         account.setAccountName(dto.getAccountName().trim());
+        account.setBankName(dto.getBankName().trim());
+        account.setAccountNumber(dto.getAccountNumber().trim());
+        account.setIfscCode(dto.getIfscCode().toUpperCase().trim());
+        account.setBankLogoUrl(dto.getBankLogoUrl() != null ? dto.getBankLogoUrl().trim() : null);
         account.setAccountType(dto.getAccountType());
         account.setCurrentBalance(dto.getInitialBalance());
         account.setCurrency(dto.getCurrency().toUpperCase().trim());
@@ -57,10 +63,20 @@ public class AccountService {
                         "Account not found with ID: " + accountId + " for the current user"));
     }
 
+    @Transactional
+    public void deleteAccount(Long accountId, Long userId) {
+        Account account = findAccountByTenant(accountId, userId);
+        accountRepository.delete(account);
+    }
+
     private AccountResponseDTO mapToDTO(Account account) {
         return AccountResponseDTO.builder()
                 .id(account.getId())
                 .accountName(account.getAccountName())
+                .bankName(account.getBankName())
+                .accountNumber(account.getAccountNumber())
+                .ifscCode(account.getIfscCode())
+                .bankLogoUrl(account.getBankLogoUrl())
                 .accountType(account.getAccountType())
                 .currentBalance(account.getCurrentBalance())
                 .currency(account.getCurrency())

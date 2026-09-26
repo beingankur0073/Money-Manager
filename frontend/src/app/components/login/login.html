@@ -44,8 +44,9 @@
         </div>
       </div>
 
-      <button type="submit" [disabled]="loginForm.invalid" class="submit-btn">
-        Sign In
+      <button type="submit" [disabled]="loginForm.invalid || isLoading" class="submit-btn btn-submit">
+        <mat-spinner *ngIf="isLoading" diameter="20" color="accent"></mat-spinner>
+        <span *ngIf="!isLoading">Sign In</span>
       </button>
     </form>
 

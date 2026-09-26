@@ -46,7 +46,7 @@ The application implements a decoupled, three-tier architecture with token-based
 
 ### Base Entity Lifecycle
 
-All tables inherit auditing timestamp tracking from `BaseEntity`:
+All audited tables inherit timestamp tracking from `BaseEntity`:
 * `created_at DATETIME2 NOT NULL`: Populated automatically at entity creation via `@PrePersist` hooks.
 
 ---
@@ -131,6 +131,7 @@ Asynchronous, append-only security and operational audit trace.
 ## Entity Relationship Diagram (ERD)
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#ffffff", "primaryTextColor": "#111827", "primaryBorderColor": "#374151", "lineColor": "#374151", "secondaryColor": "#f3f4f6", "tertiaryColor": "#e5e7eb", "textColor": "#111827"}}}%%
 erDiagram
     users ||--o{ accounts : "owns"
     users ||--o{ categories : "configures custom"
@@ -299,7 +300,7 @@ Used across all endpoints for uniform error handling (validation errors, domain 
 | Field | Type | Validation Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `accountName` | `String` | `@NotBlank`, `@Size(max = 100)` | Human-readable account label |
-| `accountType` | `AccountType` | `@NotNull` | Enum: `CHECKING`, `SAVINGS`, or `CREDIT_CARD` |
+| `accountType` | `AccountType` | `@NotNull` | Enum: `SAVINGS`, `CHECKING`, `CREDIT_CARD`, `CASH`, or `WALLET` |
 | `initialBalance` | `BigDecimal` | `@NotNull`, `@PositiveOrZero` | Starting balance for ledger initialization |
 | `currency` | `String` | `@NotBlank`, `@Size(min = 3, max = 3)` | ISO-4217 currency code (default: `"INR"`) |
 
@@ -320,7 +321,7 @@ Used across all endpoints for uniform error handling (validation errors, domain 
 | :--- | :--- | :--- |
 | `id` | `Long` | Unique account sequence identifier |
 | `accountName` | `String` | Display label |
-| `accountType` | `AccountType` | Enum value: `CHECKING`, `SAVINGS`, or `CREDIT_CARD` |
+| `accountType` | `AccountType` | Enum value: `SAVINGS`, `CHECKING`, `CREDIT_CARD`, `CASH`, or `WALLET` |
 | `currentBalance` | `BigDecimal` | Current audited running balance |
 | `currency` | `String` | ISO-4217 currency denomination |
 | `version` | `Long` | Optimistic locking iteration token |
@@ -866,7 +867,7 @@ The security framework uses Spring Security 6 configured for stateless JSON Web 
 * **Filter Ordering:** `JwtAuthenticationFilter` executes before Spring Security's standard `UsernamePasswordAuthenticationFilter`, extracting credentials and establishing `SecurityContext` early in the chain.
 * **Password Hashing:** Passwords are encrypted using standard `BCryptPasswordEncoder` with default computational salt work factor.
 * **Dual-Identifier Authentication:** `CustomUserDetailsService` loads credentials by querying either `username` or `email`, allowing flexible sign-in.
-* **CORS Whitelisting:** Permits cross-origin requests from the Angular development host (`http://localhost:4200`) across all HTTP verbs with full support for `Authorization` and pre-flight `OPTIONS` requests.
+* **CORS Whitelisting:** Permits cross-origin requests from the Angular development host (`http://localhost:4200`) across the configured HTTP verbs with support for `Authorization` and pre-flight `OPTIONS` requests.
 
 ---
 
@@ -1062,6 +1063,7 @@ The application uses a Spring Boot `CommandLineRunner` component to execute dete
 ### Bootstrap Flow Diagram
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"textColor": "#111827", "actorBkg": "#ffffff", "actorBorder": "#374151", "actorTextColor": "#111827", "actorLineColor": "#6b7280", "signalColor": "#374151", "signalTextColor": "#111827", "labelBoxBkgColor": "#e5e7eb", "labelBoxBorderColor": "#6b7280", "labelTextColor": "#111827", "loopTextColor": "#111827", "noteBkgColor": "#fef3c7", "noteBorderColor": "#92400e", "noteTextColor": "#111827", "activationBkgColor": "#dbeafe", "activationBorderColor": "#1d4ed8", "sequenceNumberColor": "#111827"}}}%%
 sequenceDiagram
     autonumber
     participant App as SpringApplication
@@ -1075,13 +1077,13 @@ sequenceDiagram
     DB-->>Repo: count value
 
     alt count == 0
-        Note over Boot: Empty table detected; prepare default presets
+        Note over Boot: Empty table detected - prepare default presets
         Boot->>Repo: saveAll(defaultCategories)
         Repo->>DB: INSERT INTO categories (name, type, user_id, created_at) VALUES (?, ?, NULL, ?)
         DB-->>Repo: Success
         Note over Boot: 7 System categories initialized
     else count > 0
-        Note over Boot: Existing records present; skip bootstrap routine
+        Note over Boot: Existing records present - skip bootstrap routine
     end
 ```
 
@@ -1253,6 +1255,7 @@ The following sequence diagrams and workflow descriptions detail the end-to-end 
 Every incoming REST request (except `/api/auth/**` and static assets) passes through the `JwtAuthenticationFilter` before reaching the application controllers.
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"textColor": "#111827", "actorBkg": "#ffffff", "actorBorder": "#374151", "actorTextColor": "#111827", "actorLineColor": "#6b7280", "signalColor": "#374151", "signalTextColor": "#111827", "labelBoxBkgColor": "#e5e7eb", "labelBoxBorderColor": "#6b7280", "labelTextColor": "#111827", "loopTextColor": "#111827", "noteBkgColor": "#fef3c7", "noteBorderColor": "#92400e", "noteTextColor": "#111827", "activationBkgColor": "#dbeafe", "activationBorderColor": "#1d4ed8", "sequenceNumberColor": "#111827"}}}%%
 sequenceDiagram
     autonumber
     actor SPA as Angular Client
@@ -1263,7 +1266,7 @@ sequenceDiagram
     participant Context as SecurityContextHolder
     participant Ctrl as REST Controller
 
-    SPA->>HTTP: Request API (Header: Authorization: Bearer <token>)
+    SPA->>HTTP: Request API (Header: Authorization: Bearer JWT)
     HTTP->>Filter: doFilterInternal()
     
     alt Token Missing or Invalid Prefix
@@ -1293,6 +1296,7 @@ sequenceDiagram
 This is the core financial engine workflow. It guarantees ACID properties and prevents race conditions (e.g., double-spending) using Spring's `@Transactional` boundary and JPA Optimistic Locking (`@Version`).
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"textColor": "#111827", "actorBkg": "#ffffff", "actorBorder": "#374151", "actorTextColor": "#111827", "actorLineColor": "#6b7280", "signalColor": "#374151", "signalTextColor": "#111827", "labelBoxBkgColor": "#e5e7eb", "labelBoxBorderColor": "#6b7280", "labelTextColor": "#111827", "loopTextColor": "#111827", "noteBkgColor": "#fef3c7", "noteBorderColor": "#92400e", "noteTextColor": "#111827", "activationBkgColor": "#dbeafe", "activationBorderColor": "#1d4ed8", "sequenceNumberColor": "#111827"}}}%%
 sequenceDiagram
     autonumber
     actor SPA as Angular Client
@@ -1337,10 +1341,11 @@ sequenceDiagram
 
 ---
 
-### 3. Asynchronous Security Audit Logging
-Critical actions (like Registration and Login) fire audit logs. The audit service runs in a completely separate transaction (`REQUIRES_NEW`), meaning even if the parent request fails *after* authentication, the audit log of the attempt is still permanently written to the database.
+### 3. Independent Security Audit Transaction
+Critical actions (like Registration and Login) write audit logs. The audit service runs in an independent transaction (`REQUIRES_NEW`), suspending the parent transaction while the audit record is persisted.
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"textColor": "#111827", "actorBkg": "#ffffff", "actorBorder": "#374151", "actorTextColor": "#111827", "actorLineColor": "#6b7280", "signalColor": "#374151", "signalTextColor": "#111827", "labelBoxBkgColor": "#e5e7eb", "labelBoxBorderColor": "#6b7280", "labelTextColor": "#111827", "loopTextColor": "#111827", "noteBkgColor": "#fef3c7", "noteBorderColor": "#92400e", "noteTextColor": "#111827", "activationBkgColor": "#dbeafe", "activationBorderColor": "#1d4ed8", "sequenceNumberColor": "#111827"}}}%%
 sequenceDiagram
     autonumber
     participant AS as AuthService
@@ -1368,6 +1373,7 @@ sequenceDiagram
 Executed exactly once upon application startup. Ensures all tenants share a standardized set of core reporting categories (e.g., Groceries, Rent, Salary) without requiring manual database initialization scripts.
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"textColor": "#111827", "actorBkg": "#ffffff", "actorBorder": "#374151", "actorTextColor": "#111827", "actorLineColor": "#6b7280", "signalColor": "#374151", "signalTextColor": "#111827", "labelBoxBkgColor": "#e5e7eb", "labelBoxBorderColor": "#6b7280", "labelTextColor": "#111827", "loopTextColor": "#111827", "noteBkgColor": "#fef3c7", "noteBorderColor": "#92400e", "noteTextColor": "#111827", "activationBkgColor": "#dbeafe", "activationBorderColor": "#1d4ed8", "sequenceNumberColor": "#111827"}}}%%
 sequenceDiagram
     autonumber
     participant Boot as Spring Boot Context
@@ -1375,7 +1381,7 @@ sequenceDiagram
     participant Repo as CategoryRepository
     participant DB as SQL Server
 
-    Boot->>Init: Context Refreshed -> run()
+    Boot->>Init: Context refreshed, then run()
     
     rect rgb(250, 240, 245)
     Note over Init,DB: @Transactional Boundary
@@ -1398,6 +1404,7 @@ sequenceDiagram
 When a service throws a runtime exception or a DTO fails Jakarta Validation, the `@RestControllerAdvice` intercepts it globally, preventing HTML stack traces from leaking to the Angular client.
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"textColor": "#111827", "actorBkg": "#ffffff", "actorBorder": "#374151", "actorTextColor": "#111827", "actorLineColor": "#6b7280", "signalColor": "#374151", "signalTextColor": "#111827", "labelBoxBkgColor": "#e5e7eb", "labelBoxBorderColor": "#6b7280", "labelTextColor": "#111827", "loopTextColor": "#111827", "noteBkgColor": "#fef3c7", "noteBorderColor": "#92400e", "noteTextColor": "#111827", "activationBkgColor": "#dbeafe", "activationBorderColor": "#1d4ed8", "sequenceNumberColor": "#111827"}}}%%
 sequenceDiagram
     autonumber
     actor SPA as Angular Client
