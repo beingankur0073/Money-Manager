@@ -1,85 +1,270 @@
 <div class="auth-wrapper">
+
   <div class="auth-card">
+
+    <!-- Brand -->
     <div class="brand-header">
+
       <div class="brand-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
           <circle cx="9" cy="7" r="4"/>
           <line x1="19" x2="19" y1="8" y2="14"/>
           <line x1="22" x2="16" y1="11" y2="11"/>
         </svg>
       </div>
+
       <h2>Create an Account</h2>
-      <p class="subtitle">Join MoneyManager to start tracking</p>
+
+      <p class="subtitle">
+        Join MoneyManager to start tracking
+      </p>
+
     </div>
 
-    <div *ngIf="errorMessage" class="global-error">
+    <!-- Global Error -->
+    <div
+      *ngIf="errorMessage"
+      class="alert alert-danger global-error"
+      role="alert"
+    >
       {{ errorMessage }}
     </div>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <!-- Registration Form -->
+    <form
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()"
+    >
 
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input id="username" type="text" formControlName="username" placeholder="Enter username" autocomplete="username">
-        <div class="field-error" *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.hasError('required')">
+      <!-- Username -->
+      <div class="mb-3">
+
+        <label
+          for="username"
+          class="form-label"
+        >
+          Username
+        </label>
+
+        <input
+          id="username"
+          type="text"
+          class="form-control"
+          formControlName="username"
+          placeholder="Enter username"
+          autocomplete="username"
+        >
+
+        <div
+          class="field-error"
+          *ngIf="
+            registerForm.get('username')?.touched &&
+            registerForm.get('username')?.hasError('required')
+          "
+        >
           Username is required.
         </div>
-        <div class="field-error" *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.hasError('minlength')">
+
+        <div
+          class="field-error"
+          *ngIf="
+            registerForm.get('username')?.touched &&
+            registerForm.get('username')?.hasError('minlength')
+          "
+        >
           Username must be at least 3 characters.
         </div>
-        <div class="field-error" *ngIf="backendErrors['username']">
+
+        <div
+          class="field-error"
+          *ngIf="backendErrors['username']"
+        >
           {{ backendErrors['username'] }}
         </div>
+
       </div>
 
-      <div class="form-group">
-        <label for="fullName">Full Name</label>
-        <input id="fullName" type="text" formControlName="fullName" placeholder="Enter full name" autocomplete="name">
-        <div class="field-error" *ngIf="registerForm.get('fullName')?.touched && registerForm.get('fullName')?.hasError('required')">
+      <!-- Full Name -->
+      <div class="mb-3">
+
+        <label
+          for="fullName"
+          class="form-label"
+        >
+          Full Name
+        </label>
+
+        <input
+          id="fullName"
+          type="text"
+          class="form-control"
+          formControlName="fullName"
+          placeholder="Enter full name"
+          autocomplete="name"
+        >
+
+        <div
+          class="field-error"
+          *ngIf="
+            registerForm.get('fullName')?.touched &&
+            registerForm.get('fullName')?.hasError('required')
+          "
+        >
           Full name is required.
         </div>
-        <div class="field-error" *ngIf="backendErrors['fullName']">
+
+        <div
+          class="field-error"
+          *ngIf="backendErrors['fullName']"
+        >
           {{ backendErrors['fullName'] }}
         </div>
+
       </div>
 
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email" placeholder="name@example.com" autocomplete="email">
-        <div class="field-error" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')">
+      <!-- Email -->
+      <div class="mb-3">
+
+        <label
+          for="email"
+          class="form-label"
+        >
+          Email
+        </label>
+
+        <input
+          id="email"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="name@example.com"
+          autocomplete="email"
+        >
+
+        <div
+          class="field-error"
+          *ngIf="
+            registerForm.get('email')?.touched &&
+            registerForm.get('email')?.hasError('required')
+          "
+        >
           Email address is required.
         </div>
-        <div class="field-error" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')">
+
+        <div
+          class="field-error"
+          *ngIf="
+            registerForm.get('email')?.touched &&
+            registerForm.get('email')?.hasError('email')
+          "
+        >
           Please enter a valid email address.
         </div>
-        <div class="field-error" *ngIf="backendErrors['email']">
+
+        <div
+          class="field-error"
+          *ngIf="backendErrors['email']"
+        >
           {{ backendErrors['email'] }}
         </div>
+
       </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input id="password" type="password" formControlName="password" placeholder="Minimum 8 characters" autocomplete="new-password">
-        <div class="field-error" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')">
+      <!-- Password -->
+      <div class="mb-3">
+
+        <label
+          for="password"
+          class="form-label"
+        >
+          Password
+        </label>
+
+        <input
+          id="password"
+          type="password"
+          class="form-control"
+          formControlName="password"
+          placeholder="Minimum 8 characters"
+          autocomplete="new-password"
+        >
+
+        <div
+          class="field-error"
+          *ngIf="
+            registerForm.get('password')?.touched &&
+            registerForm.get('password')?.hasError('required')
+          "
+        >
           Password is required.
         </div>
-        <div class="field-error" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')">
+
+        <div
+          class="field-error"
+          *ngIf="
+            registerForm.get('password')?.touched &&
+            registerForm.get('password')?.hasError('minlength')
+          "
+        >
           Password must be at least 8 characters long.
         </div>
-        <div class="field-error" *ngIf="backendErrors['password']">
+
+        <div
+          class="field-error"
+          *ngIf="backendErrors['password']"
+        >
           {{ backendErrors['password'] }}
         </div>
+
       </div>
 
-      <button type="submit" [disabled]="registerForm.invalid || isLoading" class="submit-btn btn-submit">
-        <mat-spinner *ngIf="isLoading" diameter="20" color="accent"></mat-spinner>
-        <span *ngIf="!isLoading">Register Account</span>
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="btn submit-btn btn-submit w-100"
+        [disabled]="registerForm.invalid || isLoading"
+      >
+
+        <span
+          *ngIf="isLoading"
+          class="spinner-border spinner-border-sm"
+          aria-hidden="true"
+        ></span>
+
+        <span *ngIf="isLoading">
+          Creating account...
+        </span>
+
+        <span *ngIf="!isLoading">
+          Register Account
+        </span>
+
       </button>
+
     </form>
 
+    <!-- Footer -->
     <div class="auth-footer">
-      Already have an account? <a routerLink="/login">Log in here</a>
+
+      Already have an account?
+
+      <a routerLink="/login">
+        Log in here
+      </a>
+
     </div>
+
   </div>
+
 </div>

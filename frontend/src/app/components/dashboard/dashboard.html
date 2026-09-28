@@ -1,294 +1,695 @@
 <div class="dashboard-wrapper">
-  <!-- Top Summary Metrics Banner -->
+
+  <!-- Header -->
   <header class="dashboard-header">
     <div>
       <h1>Financial Overview</h1>
-      <p class="subtitle">Monitor balances, track cash flows, and record journal entries</p>
+      <p class="subtitle">
+        Monitor balances, track cash flows, and record journal entries
+      </p>
     </div>
   </header>
 
-  <!-- Accounts Section -->
+  <!-- ================= ACCOUNTS ================= -->
   <section class="content-card">
+
     <div class="card-header">
       <div>
         <h2>Your Accounts</h2>
-        <span class="card-subtitle">Active debit, savings, and credit accounts</span>
+        <span class="card-subtitle">
+          Active debit, savings, and credit accounts
+        </span>
       </div>
     </div>
 
-    <!-- Account Cards Grid -->
-    <div class="account-grid" *ngIf="accounts.length > 0; else emptyAccounts">
-      <div class="account-tile" *ngFor="let acc of accounts">
+    <!-- Account Cards -->
+    <div
+      class="account-grid"
+      *ngIf="accounts.length > 0; else emptyAccounts">
+
+      <div
+        class="account-tile"
+        *ngFor="let acc of accounts">
+
         <div class="tile-top">
-          <span class="type-pill" [ngClass]="acc.accountType.toLowerCase()">{{ acc.accountType }}</span>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="account-id">#{{ acc.id }}</span>
-            <button 
+
+          <span
+            class="type-pill"
+            [ngClass]="acc.accountType.toLowerCase()">
+            {{ acc.accountType }}
+          </span>
+
+          <div class="account-actions">
+            <span class="account-id">
+              #{{ acc.id }}
+            </span>
+
+            <button
               type="button"
-              (click)="openDeleteModal(acc)" 
-              title="Delete Account" 
-              style="background: none; border: none; color: #ff857a; cursor: pointer; font-size: 1.2rem; padding: 0 0 0 4px; line-height: 1;">
+              class="delete-icon"
+              (click)="openDeleteModal(acc)"
+              title="Delete Account">
               &times;
             </button>
           </div>
+
         </div>
 
-        <div class="account-title" style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
-          <img *ngIf="acc.bankLogoUrl" [src]="acc.bankLogoUrl" alt="Bank Logo" style="height: 20px; width: auto;" />
-          <strong>{{ acc.accountName }}</strong>
-        </div>
-        
-        <div style="font-size: 0.8rem; color: #a1a1aa; margin-top: 2px;">
-          {{ acc.bankName }} &bull; A/C: {{ acc.accountNumber }}
-        </div>
-        <div style="font-size: 0.75rem; color: #71717a;">IFSC: {{ acc.ifscCode }}</div>
+        <div class="account-title">
 
-        <div class="account-balance" style="margin-top: 12px;">
-          {{ acc.currentBalance | currency:(acc.currency || 'INR'):'symbol':'1.2-2' }}
+          <img
+            *ngIf="acc.bankLogoUrl"
+            [src]="acc.bankLogoUrl"
+            alt="Bank Logo"
+            class="bank-logo">
+
+          <strong>
+            {{ acc.accountName }}
+          </strong>
+
         </div>
+
+        <div class="account-details">
+          {{ acc.bankName }} &bull;
+          A/C: {{ acc.accountNumber }}
+        </div>
+
+        <div class="ifsc-details">
+          IFSC: {{ acc.ifscCode }}
+        </div>
+
+        <div class="account-balance">
+          {{ acc.currentBalance |
+             currency:(acc.currency || 'INR'):'symbol':'1.2-2' }}
+        </div>
+
       </div>
+
     </div>
 
     <ng-template #emptyAccounts>
-      <div class="blank-notice">No active accounts detected. Create one below to begin transacting.</div>
+      <div class="blank-notice">
+        No active accounts detected.
+        Create one below to begin transacting.
+      </div>
     </ng-template>
 
-    <!-- Expanded Create Account Form -->
-    <div class="form-strip" style="margin-top: 24px;">
+
+    <!-- Add Account -->
+    <div class="form-strip">
+
       <h3>Add New Account</h3>
-      <form [formGroup]="accountForm" (ngSubmit)="onAddAccount()" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 12px;">
-        <div class="input-field">
-          <input type="text" formControlName="accountName" placeholder="Account Name (e.g., Salary Account)" />
+
+      <form
+        [formGroup]="accountForm"
+        (ngSubmit)="onAddAccount()"
+        class="row g-3">
+
+        <div class="col-md-6 col-lg-3">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="accountName"
+            placeholder="Account Name">
         </div>
-        <div class="input-field">
-          <input type="text" formControlName="bankName" placeholder="Bank Name (e.g., Bandhan Bank)" />
+
+        <div class="col-md-6 col-lg-3">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="bankName"
+            placeholder="Bank Name">
         </div>
-        <div class="input-field">
-          <input type="text" formControlName="accountNumber" placeholder="Account Number (9-18 digits)" />
+
+        <div class="col-md-6 col-lg-3">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="accountNumber"
+            placeholder="Account Number">
         </div>
-        <div class="input-field">
-          <input type="text" formControlName="ifscCode" placeholder="IFSC Code (e.g., BDBL0000123)" style="text-transform: uppercase;" />
+
+        <div class="col-md-6 col-lg-3">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="ifscCode"
+            placeholder="IFSC Code"
+            style="text-transform: uppercase;">
         </div>
-        <div class="input-field">
-          <select formControlName="accountType">
+
+        <div class="col-md-6 col-lg-3">
+          <select
+            class="form-select"
+            formControlName="accountType">
+
             <option value="SAVINGS">Savings</option>
             <option value="CHECKING">Checking / Current</option>
             <option value="CREDIT_CARD">Credit Card</option>
+
           </select>
         </div>
-        <div class="input-field">
-          <input type="number" formControlName="initialBalance" placeholder="Opening Balance" step="0.01" />
+
+        <div class="col-md-6 col-lg-3">
+          <input
+            type="number"
+            class="form-control"
+            formControlName="initialBalance"
+            placeholder="Opening Balance"
+            step="0.01">
         </div>
-        <div class="input-field">
-          <select formControlName="currency">
+
+        <div class="col-md-6 col-lg-3">
+          <select
+            class="form-select"
+            formControlName="currency">
+
             <option value="INR">INR (₹)</option>
             <option value="USD">USD ($)</option>
             <option value="EUR">EUR (€)</option>
+
           </select>
         </div>
-        <div class="input-field">
-          <input type="text" formControlName="bankLogoUrl" placeholder="Bank Logo URL (Optional)" />
+
+        <div class="col-md-6 col-lg-3">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="bankLogoUrl"
+            placeholder="Bank Logo URL">
         </div>
-        <div style="grid-column: 1 / -1; text-align: right;">
-          <button type="submit" [disabled]="accountForm.invalid" class="btn btn-primary">
+
+        <div class="col-12 text-end">
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="accountForm.invalid">
+
             Add Account
+
           </button>
+
         </div>
+
       </form>
+
     </div>
+
   </section>
 
-  <!-- Record Transaction Section -->
+
+  <!-- ================= TRANSACTIONS ================= -->
   <section class="content-card">
+
     <div class="card-header">
       <div>
         <h2>Record Transaction</h2>
-        <span class="card-subtitle">Apply debits and credits against your accounts</span>
-      </div>
-    </div>
 
-    <form [formGroup]="transactionForm" (ngSubmit)="onAddTransaction()" class="transaction-grid-form">
-      <div class="field-item">
-        <label>Account</label>
-        <select formControlName="accountId">
-          <option value="" disabled selected>Choose Account</option>
-          <option *ngFor="let acc of accounts" [value]="acc.id">
-            {{ acc.accountName }} ({{ acc.bankName }} - Balance: {{ acc.currentBalance | currency:(acc.currency || 'INR'):'symbol':'1.0-0' }})
-          </option>
-        </select>
-      </div>
-
-      <div class="field-item">
-        <label>Category</label>
-        <select formControlName="categoryId">
-          <option value="" disabled selected>Choose Category</option>
-          <option *ngFor="let cat of categories" [value]="cat.id">
-            {{ cat.name }} ({{ cat.type }})
-          </option>
-        </select>
-      </div>
-
-      <div class="field-item">
-        <label>Transaction Flow</label>
-        <select formControlName="transactionType">
-          <option value="DEBIT">Debit (Expense / Payment Out)</option>
-          <option value="CREDIT">Credit (Income / Deposit In)</option>
-        </select>
-      </div>
-
-      <div class="field-item">
-        <label>Transaction Date</label>
-        <input type="date" formControlName="transactionDate" />
-      </div>
-
-      <div class="field-item">
-        <label>Amount (₹)</label>
-        <input type="number" formControlName="amount" placeholder="0.00" step="0.01" />
-      </div>
-
-      <div class="field-item full-width">
-        <label>Narration / Description</label>
-        <input type="text" formControlName="notes" placeholder="e.g. Monthly Grocery Bill, Salary Credit" maxLength="255" />
-      </div>
-
-      <div class="form-actions full-width">
-        <button type="submit" [disabled]="transactionForm.invalid" class="btn btn-accent">
-          Submit Transaction
-        </button>
-      </div>
-    </form>
-  </section>
-
-  <!-- Manage Categories Section -->
-  <section class="content-card">
-    <div class="card-header">
-      <div>
-        <h2>Manage Categories</h2>
-        <span class="card-subtitle">Create custom classification tags for your cash flows</span>
-      </div>
-    </div>
-
-    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;">
-      <div *ngFor="let cat of categories" class="category-tag"
-           style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; font-size: 0.85rem;">
-        <span [ngStyle]="{'color': cat.type === 'INCOME' ? '#4ade80' : '#ff857a'}">
-          {{ cat.type === 'INCOME' ? '+' : '-' }}
+        <span class="card-subtitle">
+          Apply debits and credits against your accounts
         </span>
-        {{ cat.name }}
-        <button *ngIf="!cat.isSystemDefault"
-                (click)="onDeleteCategory(cat.id)"
-                title="Delete Custom Category"
-                style="background: none; border: none; color: #ff857a; cursor: pointer; font-size: 1.1rem; padding: 0 0 0 4px; line-height: 1;">
-          &times;
-        </button>
       </div>
     </div>
 
-    <div class="form-strip">
-      <h3>Add New Category</h3>
-      <form [formGroup]="categoryForm" (ngSubmit)="onAddCategory()" class="form-row" style="grid-template-columns: 2fr 1fr auto;">
-        <div class="input-field">
-          <input type="text" formControlName="name" placeholder="Category Name (e.g., Freelance Work)" />
-        </div>
-        <div class="input-field">
-          <select formControlName="type">
-            <option value="EXPENSE">Expense (Outflow)</option>
-            <option value="INCOME">Income (Inflow)</option>
-          </select>
-        </div>
-        <button type="submit" [disabled]="categoryForm.invalid" class="btn btn-primary">
-          Create Category
+
+    <form
+      [formGroup]="transactionForm"
+      (ngSubmit)="onAddTransaction()"
+      class="row g-3">
+
+      <!-- Account -->
+      <div class="col-md-6">
+
+        <label class="form-label">
+          Account
+        </label>
+
+        <select
+          class="form-select"
+          formControlName="accountId">
+
+          <option value="" disabled>
+            Choose Account
+          </option>
+
+          <option
+            *ngFor="let acc of accounts"
+            [value]="acc.id">
+
+            {{ acc.accountName }}
+            ({{ acc.bankName }} -
+            Balance:
+            {{ acc.currentBalance |
+               currency:(acc.currency || 'INR'):'symbol':'1.0-0' }})
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Category -->
+      <div class="col-md-6">
+
+        <label class="form-label">
+          Category
+        </label>
+
+        <select
+          class="form-select"
+          formControlName="categoryId">
+
+          <option value="" disabled>
+            Choose Category
+          </option>
+
+          <option
+            *ngFor="let cat of categories"
+            [value]="cat.id">
+
+            {{ cat.name }} ({{ cat.type }})
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Transaction Type -->
+      <div class="col-md-6">
+
+        <label class="form-label">
+          Transaction Flow
+        </label>
+
+        <select
+          class="form-select"
+          formControlName="transactionType">
+
+          <option value="DEBIT">
+            Debit (Expense / Payment Out)
+          </option>
+
+          <option value="CREDIT">
+            Credit (Income / Deposit In)
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Date -->
+      <div class="col-md-6">
+
+        <label class="form-label">
+          Transaction Date
+        </label>
+
+        <input
+          type="date"
+          class="form-control"
+          formControlName="transactionDate">
+
+      </div>
+
+
+      <!-- Amount -->
+      <div class="col-md-6">
+
+        <label class="form-label">
+          Amount (₹)
+        </label>
+
+        <input
+          type="number"
+          class="form-control"
+          formControlName="amount"
+          placeholder="0.00"
+          step="0.01">
+
+      </div>
+
+
+      <!-- Notes -->
+      <div class="col-12">
+
+        <label class="form-label">
+          Narration / Description
+        </label>
+
+        <input
+          type="text"
+          class="form-control"
+          formControlName="notes"
+          placeholder="e.g. Monthly Grocery Bill, Salary Credit"
+          maxlength="255">
+
+      </div>
+
+
+      <!-- Submit -->
+      <div class="col-12 text-end">
+
+        <button
+          type="submit"
+          class="btn btn-accent"
+          [disabled]="transactionForm.invalid">
+
+          Submit Transaction
+
         </button>
-      </form>
-    </div>
+
+      </div>
+
+    </form>
+
   </section>
 
-  <!-- Transaction Ledger -->
+
+  <!-- ================= CATEGORIES ================= -->
   <section class="content-card">
+
     <div class="card-header">
       <div>
-        <h2>Transaction Ledger</h2>
-        <span class="card-subtitle">Audited record of all account transactions</span>
+
+        <h2>Manage Categories</h2>
+
+        <span class="card-subtitle">
+          Create custom classification tags for your cash flows
+        </span>
+
       </div>
     </div>
 
-    <div class="table-container" *ngIf="transactions.length > 0; else emptyLedger">
-      <table class="data-table">
-        <thead>
-        <tr>
-          <th>Date</th>
-          <th>Account</th>
-          <th>Category</th>
-          <th>Narration / Notes</th>
-          <th>Type</th>
-          <th class="text-right">Amount</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let tx of transactions">
-          <td class="date-col">{{ tx.transactionDate | date:'mediumDate' }}</td>
-          <td class="font-medium">{{ tx.accountName || '-' }}</td>
-          <td><span class="category-tag">{{ tx.categoryName || '-' }}</span></td>
-          <td>{{ tx.notes }}</td>
-          <td>
-            <span
-              class="badge"
-              [ngClass]="(tx.transactionType || '').toLowerCase()">
-              {{ tx.transactionType }}
-            </span>
-          </td>
-          <td
-            class="text-right font-mono"
-            [ngClass]="tx.transactionType === 'DEBIT' ? 'val-debit' : 'val-credit'">
-            {{ tx.transactionType === 'DEBIT' ? '-' : '+' }}{{ tx.amount | currency:'INR':'symbol':'1.2-2' }}
-          </td>
-        </tr>
-        </tbody>
-      </table>
+
+    <!-- Category Tags -->
+    <div class="category-list">
+
+      <div
+        *ngFor="let cat of categories"
+        class="category-tag">
+
+        <span
+          [ngClass]="
+            cat.type === 'INCOME'
+              ? 'income-symbol'
+              : 'expense-symbol'
+          ">
+
+          {{ cat.type === 'INCOME' ? '+' : '-' }}
+
+        </span>
+
+        <span>
+          {{ cat.name }}
+        </span>
+
+        <button
+          *ngIf="!cat.isSystemDefault"
+          type="button"
+          class="delete-icon"
+          (click)="onDeleteCategory(cat.id)"
+          title="Delete Custom Category">
+
+          &times;
+
+        </button>
+
+      </div>
+
     </div>
+
+
+    <!-- Add Category -->
+    <div class="form-strip">
+
+      <h3>Add New Category</h3>
+
+      <form
+        [formGroup]="categoryForm"
+        (ngSubmit)="onAddCategory()"
+        class="row g-3 align-items-end">
+
+        <div class="col-md-6">
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="Category Name">
+
+        </div>
+
+        <div class="col-md-4">
+
+          <select
+            class="form-select"
+            formControlName="type">
+
+            <option value="EXPENSE">
+              Expense (Outflow)
+            </option>
+
+            <option value="INCOME">
+              Income (Inflow)
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="col-md-2">
+
+          <button
+            type="submit"
+            class="btn btn-primary w-100"
+            [disabled]="categoryForm.invalid">
+
+            Create Category
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= LEDGER ================= -->
+  <section class="content-card">
+
+    <div class="card-header">
+      <div>
+
+        <h2>Transaction Ledger</h2>
+
+        <span class="card-subtitle">
+          Audited record of all account transactions
+        </span>
+
+      </div>
+    </div>
+
+
+    <div
+      class="table-container"
+      *ngIf="transactions.length > 0; else emptyLedger">
+
+      <table class="table table-hover align-middle data-table">
+
+        <thead>
+
+          <tr>
+            <th>Date</th>
+            <th>Account</th>
+            <th>Category</th>
+            <th>Narration / Notes</th>
+            <th>Type</th>
+            <th class="text-end">Amount</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let tx of transactions">
+
+            <td class="date-col">
+              {{ tx.transactionDate | date:'mediumDate' }}
+            </td>
+
+            <td class="font-medium">
+              {{ tx.accountName || '-' }}
+            </td>
+
+            <td>
+              <span class="category-tag">
+                {{ tx.categoryName || '-' }}
+              </span>
+            </td>
+
+            <td>
+              {{ tx.notes || '-' }}
+            </td>
+
+            <td>
+
+              <span
+                class="badge"
+                [ngClass]="
+                  (tx.transactionType || '').toLowerCase()
+                ">
+
+                {{ tx.transactionType }}
+
+              </span>
+
+            </td>
+
+            <td
+              class="text-end font-mono"
+              [ngClass]="
+                tx.transactionType === 'DEBIT'
+                  ? 'val-debit'
+                  : 'val-credit'
+              ">
+
+              {{ tx.transactionType === 'DEBIT' ? '-' : '+' }}
+
+              {{ tx.amount |
+                 currency:'INR':'symbol':'1.2-2' }}
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
 
     <ng-template #emptyLedger>
-      <div class="blank-notice">No transactions have been recorded yet.</div>
+
+      <div class="blank-notice">
+        No transactions have been recorded yet.
+      </div>
+
     </ng-template>
+
   </section>
 
-  <!-- Delete Account Confirmation Modal -->
-  <div class="modal-backdrop" *ngIf="accountToDelete" (click)="closeDeleteModal()">
-    <div class="modal-card" (click)="$event.stopPropagation()">
+
+  <!-- ================= DELETE ACCOUNT MODAL ================= -->
+  <div
+    class="modal-backdrop"
+    *ngIf="accountToDelete"
+    (click)="closeDeleteModal()">
+
+    <div
+      class="modal-card"
+      (click)="$event.stopPropagation()">
+
       <div class="modal-header">
+
         <h3>Delete Account</h3>
-        <button type="button" class="close-btn" (click)="closeDeleteModal()">&times;</button>
+
+        <button
+          type="button"
+          class="close-btn"
+          (click)="closeDeleteModal()">
+
+          &times;
+
+        </button>
+
       </div>
+
+
       <div class="modal-body">
+
         <p>
-          This action cannot be undone. Deleting the account <strong>"{{ accountToDelete.accountName }}"</strong> 
-          will also <strong>permanently delete all transactions associated with this account</strong>.
-        </p>      
-        <p style="margin-top: 8px;">Please type the account name below to confirm deletion.</p>
-        
-        <form [formGroup]="deleteAccountForm" (ngSubmit)="onConfirmDeleteAccount()">
-          <div class="input-field" style="margin: 16px 0;">
-            <label style="display: block; font-size: 0.85rem; margin-bottom: 6px; color: #a1a1aa;">
-              Type <strong>{{ accountToDelete.accountName }}</strong> to confirm
+          This action cannot be undone.
+          Deleting the account
+          <strong>
+            "{{ accountToDelete.accountName }}"
+          </strong>
+          will also
+          <strong>
+            permanently delete all transactions associated with this account
+          </strong>.
+        </p>
+
+        <p class="confirmation-text">
+          Please type the account name below to confirm deletion.
+        </p>
+
+
+        <form
+          [formGroup]="deleteAccountForm"
+          (ngSubmit)="onConfirmDeleteAccount()">
+
+          <div class="mb-3">
+
+            <label class="form-label">
+
+              Type
+              <strong>
+                {{ accountToDelete.accountName }}
+              </strong>
+              to confirm
+
             </label>
-            <input 
-              type="text" 
-              formControlName="confirmName" 
+
+            <input
+              type="text"
+              class="form-control"
+              formControlName="confirmName"
               placeholder="Enter account name"
-              autocomplete="off" />
+              autocomplete="off">
+
           </div>
 
+
           <div class="modal-actions">
-            <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
-            <button 
-              type="submit" 
-              class="btn btn-danger" 
-              [disabled]="deleteAccountForm.invalid || deleteAccountForm.value.confirmName !== accountToDelete.accountName">
-              Confirm Delete
+
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="closeDeleteModal()">
+
+              Cancel
+
             </button>
+
+            <button
+              type="submit"
+              class="btn btn-danger"
+              [disabled]="
+                deleteAccountForm.invalid ||
+                deleteAccountForm.value.confirmName !== accountToDelete.accountName
+              ">
+
+              Confirm Delete
+
+            </button>
+
           </div>
+
         </form>
+
       </div>
+
     </div>
+
   </div>
+
 </div>

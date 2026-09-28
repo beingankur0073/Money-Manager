@@ -1,9 +1,12 @@
 .auth-wrapper {
   min-height: calc(100vh - 120px);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 24px 16px;
+
   position: relative;
   z-index: 1;
 }
@@ -11,15 +14,25 @@
 .auth-card {
   width: 100%;
   max-width: 420px;
+
+  padding: 38px 32px;
+
   background: rgba(255, 255, 255, 0.08);
+
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 18px;
+
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-  padding: 38px 32px;
+
   box-sizing: border-box;
 }
+
+/* =========================================================
+   Brand
+   ========================================================= */
 
 .brand-header {
   text-align: center;
@@ -28,13 +41,20 @@
   .brand-icon {
     width: 52px;
     height: 52px;
+
     background: rgba(239, 59, 35, 0.15);
+
     color: #ffffff;
+
     border: 1px solid rgba(239, 59, 35, 0.4);
+
     border-radius: 12px;
+
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
+
     margin-bottom: 14px;
 
     svg {
@@ -44,79 +64,132 @@
 
   h2 {
     margin: 0;
+
     font-size: 1.6rem;
     font-weight: 700;
+
     color: #ffffff;
+
     letter-spacing: -0.01em;
   }
 
   .subtitle {
-    margin: 6px 0 0 0;
+    margin: 6px 0 0;
+
     font-size: 0.88rem;
+
     color: rgba(255, 255, 255, 0.7);
   }
 }
 
-.form-group {
-  margin-bottom: 20px;
+/* =========================================================
+   Bootstrap Form Customization
+   ========================================================= */
 
-  label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.85);
+.form-label {
+  margin-bottom: 6px;
+
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.form-control {
+  padding: 11px 14px;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  border-radius: 8px;
+
+  font-size: 0.95rem;
+
+  color: #ffffff;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.35);
   }
 
-  input {
-    width: 100%;
-    padding: 11px 14px;
-    box-sizing: border-box;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 8px;
-    font-size: 0.95rem;
+  &:focus {
+    background: rgba(255, 255, 255, 0.12);
+
+    border-color: #ef3b23;
+
     color: #ffffff;
-    outline: none;
-    transition: all 0.2s ease;
 
-    &::placeholder {
-      color: rgba(255, 255, 255, 0.35);
-    }
-
-    &:focus {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: #ef3b23;
-      box-shadow: 0 0 0 3px rgba(239, 59, 35, 0.25);
-    }
-  }
-
-  .field-error {
-    margin-top: 5px;
-    font-size: 0.78rem;
-    color: #ff857a;
+    box-shadow:
+      0 0 0 3px rgba(239, 59, 35, 0.25);
   }
 }
 
+/* =========================================================
+   Validation
+   ========================================================= */
+
+.field-error {
+  margin-top: 5px;
+
+  font-size: 0.78rem;
+
+  color: #ff857a;
+}
+
+/* =========================================================
+   Global Error
+   ========================================================= */
+
+.global-error {
+  background: rgba(239, 59, 35, 0.2);
+
+  border: 1px solid rgba(239, 59, 35, 0.5);
+
+  color: #ffc4be;
+
+  padding: 10px 14px;
+
+  border-radius: 8px;
+
+  font-size: 0.85rem;
+
+  margin-bottom: 20px;
+
+  text-align: center;
+}
+
+/* =========================================================
+   Submit Button
+   ========================================================= */
+
 .submit-btn {
-  width: 100%;
   padding: 12px;
-  background: linear-gradient(135deg, #ef3b23 0%, #a71e1f 100%);
+
+  background: linear-gradient(
+    135deg,
+    #ef3b23 0%,
+    #a71e1f 100%
+  );
+
   color: #ffffff;
+
   border: none;
   border-radius: 8px;
+
   font-size: 0.95rem;
   font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(239, 59, 35, 0.35);
-  transition: opacity 0.2s ease, transform 0.1s ease;
 
-  /* Flexbox settings for centering the loading spinner */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 46px;
+  box-shadow:
+    0 4px 16px rgba(239, 59, 35, 0.35);
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.1s ease;
 
   &:hover:not(:disabled) {
     opacity: 0.92;
@@ -129,44 +202,48 @@
 
   &:disabled {
     opacity: 0.45;
+
     cursor: not-allowed;
+
     box-shadow: none;
   }
-
-  /* Angular Material Spinner override inside button */
-  ::ng-deep mat-spinner {
-    circle {
-      stroke: #ffffff !important;
-    }
-  }
 }
 
-.global-error {
-  background: rgba(239, 59, 35, 0.2);
-  border: 1px solid rgba(239, 59, 35, 0.5);
-  color: #ffc4be;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  margin-bottom: 20px;
-  text-align: center;
-}
+/* =========================================================
+   Footer
+   ========================================================= */
 
 .auth-footer {
   margin-top: 24px;
+
   text-align: center;
+
   font-size: 0.88rem;
+
   color: rgba(255, 255, 255, 0.7);
 
   a {
     color: #ffffff;
+
     font-weight: 600;
+
     text-decoration: underline;
     text-underline-offset: 3px;
+
     transition: color 0.2s ease;
 
     &:hover {
       color: #ef3b23;
     }
+  }
+}
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 576px) {
+  .auth-card {
+    padding: 30px 22px;
   }
 }

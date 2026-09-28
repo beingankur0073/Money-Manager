@@ -1,0 +1,396 @@
+<div class="page-wrapper">
+
+  <header class="page-header">
+    <div>
+      <h1>Accounts</h1>
+
+      <p class="subtitle">
+        Manage your bank, savings, debit, and credit accounts
+      </p>
+    </div>
+  </header>
+
+
+  <!-- ================= ACCOUNTS ================= -->
+
+  <section class="content-card">
+
+    <div class="card-header">
+      <div>
+        <h2>Your Accounts</h2>
+
+        <span class="card-subtitle">
+          Active debit, savings, and credit accounts
+        </span>
+      </div>
+    </div>
+
+
+    <!-- Account Cards -->
+
+    <div
+      class="account-grid"
+      *ngIf="accounts.length > 0; else emptyAccounts">
+
+      <div
+        class="account-tile"
+        *ngFor="let acc of accounts">
+
+        <div class="tile-top">
+
+          <span
+            class="type-pill"
+            [ngClass]="acc.accountType.toLowerCase()">
+
+            {{ acc.accountType }}
+
+          </span>
+
+
+          <div class="account-actions">
+
+            <span class="account-id">
+              #{{ acc.id }}
+            </span>
+
+            <button
+              type="button"
+              class="delete-icon"
+              (click)="openDeleteModal(acc)"
+              title="Delete Account">
+
+              &times;
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="account-title">
+
+          <img
+            *ngIf="acc.bankLogoUrl"
+            [src]="acc.bankLogoUrl"
+            alt="Bank Logo"
+            class="bank-logo">
+
+          <strong>
+            {{ acc.accountName }}
+          </strong>
+
+        </div>
+
+
+        <div class="account-details">
+
+          {{ acc.bankName }} &bull;
+          A/C: {{ acc.accountNumber }}
+
+        </div>
+
+
+        <div class="ifsc-details">
+
+          IFSC: {{ acc.ifscCode }}
+
+        </div>
+
+
+        <div class="account-balance">
+
+          {{ acc.currentBalance |
+             currency:(acc.currency || 'INR'):'symbol':'1.2-2' }}
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <ng-template #emptyAccounts>
+
+      <div class="blank-notice">
+
+        No active accounts detected.
+        Create one below to begin transacting.
+
+      </div>
+
+    </ng-template>
+
+
+    <!-- Add Account -->
+
+    <div class="form-strip">
+
+      <h3>Add New Account</h3>
+
+
+      <form
+        [formGroup]="accountForm"
+        (ngSubmit)="onAddAccount()"
+        class="row g-3">
+
+
+        <div class="col-md-6 col-lg-3">
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="accountName"
+            placeholder="Account Name">
+
+        </div>
+
+
+        <div class="col-md-6 col-lg-3">
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="bankName"
+            placeholder="Bank Name">
+
+        </div>
+
+
+        <div class="col-md-6 col-lg-3">
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="accountNumber"
+            placeholder="Account Number">
+
+        </div>
+
+
+        <div class="col-md-6 col-lg-3">
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="ifscCode"
+            placeholder="IFSC Code"
+            style="text-transform: uppercase;">
+
+        </div>
+
+
+        <div class="col-md-6 col-lg-3">
+
+          <select
+            class="form-select"
+            formControlName="accountType">
+
+            <option value="SAVINGS">
+              Savings
+            </option>
+
+            <option value="CHECKING">
+              Checking / Current
+            </option>
+
+            <option value="CREDIT_CARD">
+              Credit Card
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="col-md-6 col-lg-3">
+
+          <input
+            type="number"
+            class="form-control"
+            formControlName="initialBalance"
+            placeholder="Opening Balance"
+            step="0.01">
+
+        </div>
+
+
+        <div class="col-md-6 col-lg-3">
+
+          <select
+            class="form-select"
+            formControlName="currency">
+
+            <option value="INR">
+              INR (₹)
+            </option>
+
+            <option value="USD">
+              USD ($)
+            </option>
+
+            <option value="EUR">
+              EUR (€)
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="col-md-6 col-lg-3">
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="bankLogoUrl"
+            placeholder="Bank Logo URL">
+
+        </div>
+
+
+        <div class="col-12 text-end">
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="accountForm.invalid">
+
+            Add Account
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= DELETE ACCOUNT MODAL ================= -->
+
+  <div
+    class="modal-backdrop"
+    *ngIf="accountToDelete"
+    (click)="closeDeleteModal()">
+
+
+    <div
+      class="modal-card"
+      (click)="$event.stopPropagation()">
+
+
+      <div class="modal-header">
+
+        <h3>
+          Delete Account
+        </h3>
+
+
+        <button
+          type="button"
+          class="close-btn"
+          (click)="closeDeleteModal()">
+
+          &times;
+
+        </button>
+
+      </div>
+
+
+      <div class="modal-body">
+
+        <p>
+
+          This action cannot be undone.
+
+          Deleting the account
+
+          <strong>
+            "{{ accountToDelete.accountName }}"
+          </strong>
+
+          will also
+
+          <strong>
+            permanently delete all transactions associated with this account
+          </strong>.
+
+        </p>
+
+
+        <p class="confirmation-text">
+
+          Please type the account name below to confirm deletion.
+
+        </p>
+
+
+        <form
+          [formGroup]="deleteAccountForm"
+          (ngSubmit)="onConfirmDeleteAccount()">
+
+
+          <div class="mb-3">
+
+            <label class="form-label">
+
+              Type
+
+              <strong>
+                {{ accountToDelete.accountName }}
+              </strong>
+
+              to confirm
+
+            </label>
+
+
+            <input
+              type="text"
+              class="form-control"
+              formControlName="confirmName"
+              placeholder="Enter account name"
+              autocomplete="off">
+
+          </div>
+
+
+          <div class="modal-actions">
+
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="closeDeleteModal()">
+
+              Cancel
+
+            </button>
+
+
+            <button
+              type="submit"
+              class="btn btn-danger"
+              [disabled]="
+                deleteAccountForm.invalid ||
+                deleteAccountForm.value.confirmName !== accountToDelete.accountName
+              ">
+
+              Confirm Delete
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

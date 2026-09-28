@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg">
+
+  <div class="container-fluid">
+
+    <!-- Brand -->
+    <a
+      class="navbar-brand"
+      routerLink="/dashboard">
+      Money Manager
+    </a>
+
+
+    <!-- Navigation -->
+    <div
+      class="d-flex align-items-center gap-4"
+      *ngIf="authService.isLoggedIn()">
+
+      <a
+        class="nav-link"
+        routerLink="/accounts"
+        routerLinkActive="active">
+        Accounts
+      </a>
+
+      <a
+        class="nav-link"
+        routerLink="/transactions"
+        routerLinkActive="active">
+        Transactions
+      </a>
+
+      <a
+        class="nav-link"
+        routerLink="/categories"
+        routerLinkActive="active">
+        Categories
+      </a>
+
+      <button
+        type="button"
+        class="btn btn-outline-light"
+        (click)="onLogout()">
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+
+</nav>

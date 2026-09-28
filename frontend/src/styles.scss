@@ -1,41 +1,6 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
-@use '@angular/material' as mat;
-
-html {
-  height: 100%;
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
-}
-
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
-  margin: 0;
-  height: 100%;
-}
+/* =========================================================
+   Global Application Styles
+   ========================================================= */
 
 /* Global CSS variables */
 :root {
@@ -43,26 +8,30 @@ body {
   --bank-blue-deep: #030f1a;
   --bank-red: #ef3b23;
   --bank-red-dark: #a71e1f;
+
   --glass-bg: rgba(255, 255, 255, 0.08);
   --glass-border: rgba(255, 255, 255, 0.16);
+
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.72);
 }
 
-/* Reset & root page styling */
+/* =========================================================
+   Global Page Styling
+   ========================================================= */
+
 html,
 body {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  min-height: 100%;
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bank-blue-deep);
   color: var(--text-primary);
   overflow-x: hidden;
-  position: relative;
 }
 
-/* Centered glowing red circle visible across all pages */
+/* Centered glowing red circle */
 body::before {
   content: '';
   position: fixed;
@@ -71,12 +40,14 @@ body::before {
   width: 480px;
   height: 480px;
   transform: translate(-50%, -50%);
+
   background: radial-gradient(
     circle,
     var(--bank-red) 0%,
     var(--bank-red-dark) 45%,
     transparent 70%
   );
+
   border-radius: 50%;
   filter: blur(65px);
   opacity: 0.65;
@@ -84,180 +55,79 @@ body::before {
   z-index: 0;
 }
 
-/* Subtle corner ambient depth to support the deep blue background */
+/* Subtle corner ambient depth */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 10% 20%, rgba(10, 49, 82, 0.75) 0%, transparent 55%);
+
+  background: radial-gradient(
+    circle at 10% 20%,
+    rgba(10, 49, 82, 0.75) 0%,
+    transparent 55%
+  );
+
   pointer-events: none;
   z-index: 0;
 }
 
-/* Navbar updated with modern glass blur and brand styling */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 24px;
-  background: rgba(10, 35, 60, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
+/* =========================================================
+   Application Content
+   ========================================================= */
 
-.nav-brand {
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.nav-actions a {
-  color: #94a3b8;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.nav-actions a.active,
-.nav-actions a:hover {
-  color: #ffffff;
-}
-
-.logout-btn {
-  width: auto;
-  margin: 0;
-  padding: 6px 14px;
-  background: linear-gradient(135deg, var(--bank-red) 0%, var(--bank-red-dark) 100%);
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    opacity 0.2s ease,
-    transform 0.1s ease;
-}
-
-.logout-btn:hover {
-  opacity: 0.92;
-  transform: translateY(-1px);
-}
-
-.container {
+main {
   position: relative;
   z-index: 1;
-  padding: 20px;
-  max-width: 1100px;
-  margin: 0 auto;
 }
 
-/* Angular Material Snackbar Classic Status Toasts */
+/* =========================================================
+   Custom Logout Notification
+   ========================================================= */
 
-/* Standard Green Success Toast */
-.toast-success .mat-mdc-snack-bar-container,
-.toast-success .mdc-snackbar__surface {
-  --mdc-snackbar-container-color: #16a34a !important;
-  background-color: rgba(22, 163, 74, 0.95) !important;
-  border: 1px solid rgba(74, 222, 128, 0.5) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(34, 197, 94, 0.3) !important;
-  backdrop-filter: blur(16px) !important;
+.logout-alert {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  min-width: 300px;
+  max-width: 90%;
+
+  z-index: 1050;
+
+  text-align: center;
+
+  background: rgba(217, 119, 6, 0.95);
+  color: #ffffff;
+
+  border: 1px solid rgba(251, 191, 36, 0.5);
+  border-radius: 12px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.4);
+
+  backdrop-filter: blur(16px);
 }
 
-.toast-success .mdc-snackbar__label {
-  color: #ffffff !important;
-  font-weight: 500 !important;
-}
+/* =========================================================
+   Submit Button Helper
+   ========================================================= */
 
-.toast-success .mat-mdc-snack-bar-action,
-.toast-success .mat-mdc-button-touch-target {
-  color: #dcfce7 !important;
-  font-weight: 700 !important;
-}
-
-/* Standard Red Error Toast */
-.toast-error .mat-mdc-snack-bar-container,
-.toast-error .mdc-snackbar__surface {
-  --mdc-snackbar-container-color: #dc2626 !important;
-  background-color: rgba(220, 38, 38, 0.95) !important;
-  border: 1px solid rgba(248, 113, 113, 0.5) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(239, 68, 68, 0.3) !important;
-  backdrop-filter: blur(16px) !important;
-}
-
-.toast-error .mdc-snackbar__label {
-  color: #ffffff !important;
-  font-weight: 500 !important;
-}
-
-.toast-error .mat-mdc-snack-bar-action,
-.toast-error .mat-mdc-button-touch-target {
-  color: #fee2e2 !important;
-  font-weight: 700 !important;
-}
-
-/* Amber/Orange Logout Toast */
-.toast-logout .mat-mdc-snack-bar-container,
-.toast-logout .mdc-snackbar__surface {
-  --mdc-snackbar-container-color: #d97706 !important;
-  background-color: rgba(217, 119, 6, 0.95) !important;
-  border: 1px solid rgba(251, 191, 36, 0.5) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
-  backdrop-filter: blur(16px) !important;
-}
-
-.toast-logout .mdc-snackbar__label {
-  color: #ffffff !important;
-  font-weight: 500 !important;
-}
-
-.toast-logout .mat-mdc-snack-bar-action,
-.toast-logout .mat-mdc-button-touch-target {
-  color: #fef3c7 !important;
-  font-weight: 700 !important;
-}
-
-/* Blue Info Toast */
-.toast-info .mat-mdc-snack-bar-container,
-.toast-info .mdc-snackbar__surface {
-  --mdc-snackbar-container-color: #0284c7 !important;
-  background-color: rgba(2, 132, 199, 0.95) !important;
-  border: 1px solid rgba(56, 189, 248, 0.5) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
-  backdrop-filter: blur(16px) !important;
-}
-
-.toast-info .mdc-snackbar__label {
-  color: #ffffff !important;
-  font-weight: 500 !important;
-}
-
-.toast-info .mat-mdc-snack-bar-action,
-.toast-info .mat-mdc-button-touch-target {
-  color: #e0f2fe !important;
-  font-weight: 700 !important;
-}
-
-/* Button layout helper for centering mat-spinner */
 .btn-submit {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   min-height: 46px;
+}
+
+
+.navbar {
+  background: rgba(10, 35, 60, 0.65) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }

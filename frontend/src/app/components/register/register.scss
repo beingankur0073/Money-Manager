@@ -1,76 +1,183 @@
-.auth-container {
-  max-width: 420px;
-  margin: 40px auto;
-  padding: 36px 32px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 18px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-  box-sizing: border-box;
+.auth-wrapper {
+  min-height: calc(100vh - 70px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 40px 20px;
+
   position: relative;
   z-index: 1;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 36px 32px;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   Brand
+   ========================================================= */
+
+.brand-header {
+  text-align: center;
+  margin-bottom: 28px;
 
   h2 {
-    margin-top: 0;
-    margin-bottom: 24px;
+    margin: 14px 0 8px;
+
     font-size: 1.6rem;
     font-weight: 700;
+
     color: #ffffff;
     letter-spacing: -0.01em;
-    text-align: center;
   }
 }
 
-.form-group {
-  margin-bottom: 18px;
+.brand-icon {
+  width: 56px;
+  height: 56px;
 
-  label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 500;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.85);
-  }
+  margin: 0 auto;
 
-  input {
-    width: 100%;
-    padding: 11px 14px;
-    box-sizing: border-box;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 8px;
-    font-size: 0.95rem;
-    color: #ffffff;
-    outline: none;
-    transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    &::placeholder {
-      color: rgba(255, 255, 255, 0.35);
-    }
-
-    &:focus {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: #ef3b23;
-      box-shadow: 0 0 0 3px rgba(239, 59, 35, 0.25);
-    }
-  }
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #ef3b23 0%, #a71e1f 100%);
   color: #ffffff;
+
+  background: linear-gradient(
+    135deg,
+    #ef3b23,
+    #a71e1f
+  );
+
+  border-radius: 14px;
+
+  box-shadow: 0 8px 20px rgba(239, 59, 35, 0.3);
+}
+
+.subtitle {
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.7);
+
+  font-size: 0.9rem;
+}
+
+/* =========================================================
+   Bootstrap Form Overrides
+   ========================================================= */
+
+.form-label {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.form-control {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  color: #ffffff;
+
+  border-radius: 8px;
+
+  padding: 11px 14px;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.12);
+
+    border-color: #ef3b23;
+
+    color: #ffffff;
+
+    box-shadow:
+      0 0 0 3px rgba(239, 59, 35, 0.25);
+  }
+}
+
+/* =========================================================
+   Validation Errors
+   ========================================================= */
+
+.field-error {
+  color: #ff857a;
+
+  font-size: 0.78rem;
+
+  margin-top: 5px;
+}
+
+/* =========================================================
+   Global Error
+   ========================================================= */
+
+.global-error {
+  margin-bottom: 20px;
+
+  background: rgba(239, 59, 35, 0.2);
+
+  color: #ffc4be;
+
+  border: 1px solid rgba(239, 59, 35, 0.5);
+
+  border-radius: 8px;
+}
+
+/* =========================================================
+   Submit Button
+   ========================================================= */
+
+.submit-btn {
+  margin-top: 8px;
+
+  padding: 12px;
+
+  background: linear-gradient(
+    135deg,
+    #ef3b23 0%,
+    #a71e1f 100%
+  );
+
+  color: #ffffff;
+
   border: none;
   border-radius: 8px;
+
   font-size: 0.95rem;
   font-weight: 600;
-  cursor: pointer;
-  margin-top: 8px;
-  box-shadow: 0 4px 16px rgba(239, 59, 35, 0.35);
-  transition: opacity 0.2s ease, transform 0.1s ease;
+
+  box-shadow:
+    0 4px 16px rgba(239, 59, 35, 0.35);
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.1s ease;
 
   &:hover:not(:disabled) {
     opacity: 0.92;
@@ -88,17 +195,27 @@ button {
   }
 }
 
+/* =========================================================
+   Footer
+   ========================================================= */
+
 .auth-footer {
   margin-top: 22px;
+
   text-align: center;
+
   font-size: 0.88rem;
+
   color: rgba(255, 255, 255, 0.7);
 
   a {
     color: #ffffff;
+
     text-decoration: underline;
     text-underline-offset: 3px;
+
     font-weight: 600;
+
     transition: color 0.2s ease;
 
     &:hover {
@@ -107,19 +224,16 @@ button {
   }
 }
 
-.error {
-  color: #ff857a;
-  font-size: 0.78rem;
-  margin-top: 5px;
-}
+/* =========================================================
+   Mobile
+   ========================================================= */
 
-.global-error {
-  margin-bottom: 20px;
-  text-align: center;
-  font-size: 0.85rem;
-  background: rgba(239, 59, 35, 0.2);
-  color: #ffc4be;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(239, 59, 35, 0.5);
+@media (max-width: 576px) {
+  .auth-wrapper {
+    padding: 25px 15px;
+  }
+
+  .auth-card {
+    padding: 30px 22px;
+  }
 }

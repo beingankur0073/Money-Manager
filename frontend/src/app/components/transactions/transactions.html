@@ -1,0 +1,333 @@
+<div class="page-wrapper">
+
+  <header class="page-header">
+
+    <div>
+
+      <h1>Transactions</h1>
+
+      <p class="subtitle">
+        Record and review all account transactions
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- ================= RECORD TRANSACTION ================= -->
+
+  <section class="content-card">
+
+    <div class="card-header">
+
+      <div>
+
+        <h2>Record Transaction</h2>
+
+        <span class="card-subtitle">
+          Apply debits and credits against your accounts
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <form
+      [formGroup]="transactionForm"
+      (ngSubmit)="onAddTransaction()"
+      class="row g-3">
+
+
+      <!-- Account -->
+
+      <div class="col-md-6">
+
+        <label class="form-label">
+          Account
+        </label>
+
+        <select
+          class="form-select"
+          formControlName="accountId">
+
+          <option value="" disabled>
+            Choose Account
+          </option>
+
+          <option
+            *ngFor="let acc of accounts"
+            [value]="acc.id">
+
+            {{ acc.accountName }}
+
+            ({{ acc.bankName }} -
+
+            Balance:
+
+            {{ acc.currentBalance |
+               currency:(acc.currency || 'INR'):'symbol':'1.0-0' }})
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Category -->
+
+      <div class="col-md-6">
+
+        <label class="form-label">
+          Category
+        </label>
+
+        <select
+          class="form-select"
+          formControlName="categoryId">
+
+          <option value="" disabled>
+            Choose Category
+          </option>
+
+          <option
+            *ngFor="let cat of categories"
+            [value]="cat.id">
+
+            {{ cat.name }} ({{ cat.type }})
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Transaction Type -->
+
+      <div class="col-md-6">
+
+        <label class="form-label">
+          Transaction Flow
+        </label>
+
+        <select
+          class="form-select"
+          formControlName="transactionType">
+
+          <option value="DEBIT">
+            Debit (Expense / Payment Out)
+          </option>
+
+          <option value="CREDIT">
+            Credit (Income / Deposit In)
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Date -->
+
+      <div class="col-md-6">
+
+        <label class="form-label">
+          Transaction Date
+        </label>
+
+        <input
+          type="date"
+          class="form-control"
+          formControlName="transactionDate">
+
+      </div>
+
+
+      <!-- Amount -->
+
+      <div class="col-md-6">
+
+        <label class="form-label">
+          Amount (₹)
+        </label>
+
+        <input
+          type="number"
+          class="form-control"
+          formControlName="amount"
+          placeholder="0.00"
+          step="0.01">
+
+      </div>
+
+
+      <!-- Notes -->
+
+      <div class="col-12">
+
+        <label class="form-label">
+          Narration / Description
+        </label>
+
+        <input
+          type="text"
+          class="form-control"
+          formControlName="notes"
+          placeholder="e.g. Monthly Grocery Bill, Salary Credit"
+          maxlength="255">
+
+      </div>
+
+
+      <!-- Submit -->
+
+      <div class="col-12 text-end">
+
+        <button
+          type="submit"
+          class="btn btn-accent"
+          [disabled]="transactionForm.invalid">
+
+          Submit Transaction
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+
+  <!-- ================= LEDGER ================= -->
+
+  <section class="content-card">
+
+    <div class="card-header">
+
+      <div>
+
+        <h2>Transaction Ledger</h2>
+
+        <span class="card-subtitle">
+          Audited record of all account transactions
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="table-container"
+      *ngIf="transactions.length > 0; else emptyLedger">
+
+      <div class="table-responsive">
+
+        <table
+          class="table table-hover align-middle data-table">
+
+          <thead>
+
+            <tr>
+
+              <th>Date</th>
+              <th>Account</th>
+              <th>Category</th>
+              <th>Narration / Notes</th>
+              <th>Type</th>
+              <th class="text-end">
+                Amount
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <tr
+              *ngFor="let tx of transactions">
+
+              <td class="date-col">
+                {{ tx.transactionDate | date:'mediumDate' }}
+              </td>
+
+
+              <td class="font-medium">
+                {{ tx.accountName || '-' }}
+              </td>
+
+
+              <td>
+
+                <span class="category-tag">
+                  {{ tx.categoryName || '-' }}
+                </span>
+
+              </td>
+
+
+              <td>
+                {{ tx.notes || '-' }}
+              </td>
+
+
+              <td>
+
+                <span
+                  class="badge"
+                  [ngClass]="
+                    (tx.transactionType || '').toLowerCase()
+                  ">
+
+                  {{ tx.transactionType }}
+
+                </span>
+
+              </td>
+
+
+              <td
+                class="text-end font-mono"
+                [ngClass]="
+                  tx.transactionType === 'DEBIT'
+                    ? 'val-debit'
+                    : 'val-credit'
+                ">
+
+                {{ tx.transactionType === 'DEBIT' ? '-' : '+' }}
+
+                {{ tx.amount |
+                   currency:'INR':'symbol':'1.2-2' }}
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <ng-template #emptyLedger>
+
+      <div class="blank-notice">
+
+        No transactions have been recorded yet.
+
+      </div>
+
+    </ng-template>
+
+  </section>
+
+</div>

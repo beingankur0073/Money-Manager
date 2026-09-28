@@ -1,11 +1,9 @@
-<nav class="navbar" *ngIf="authService.isLoggedIn()">
-  <div class="nav-brand">Money Manager</div>
-  <div class="nav-actions">
-    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-    <button class="logout-btn" (click)="onLogout()">Logout</button>
-  </div>
-</nav>
+<app-header></app-header>
 
-<main class="container">
+<main class="app-body">
   <router-outlet></router-outlet>
 </main>
+
+<app-toast></app-toast>
+
+<app-footer></app-footer>

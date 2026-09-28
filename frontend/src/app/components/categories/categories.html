@@ -1,0 +1,143 @@
+<div class="page-wrapper">
+
+  <header class="page-header">
+
+    <div>
+
+      <h1>Categories</h1>
+
+      <p class="subtitle">
+        Manage categories used to classify your cash flows
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- ================= CATEGORIES ================= -->
+
+  <section class="content-card">
+
+    <div class="card-header">
+
+      <div>
+
+        <h2>Manage Categories</h2>
+
+        <span class="card-subtitle">
+          Create custom classification tags for your cash flows
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- Category Tags -->
+
+    <div class="category-list">
+
+      <div
+        *ngFor="let cat of categories"
+        class="category-tag">
+
+
+        <span
+          [ngClass]="
+            cat.type === 'INCOME'
+              ? 'income-symbol'
+              : 'expense-symbol'
+          ">
+
+          {{ cat.type === 'INCOME' ? '+' : '-' }}
+
+        </span>
+
+
+        <span>
+          {{ cat.name }}
+        </span>
+
+
+        <button
+          *ngIf="!cat.isSystemDefault"
+          type="button"
+          class="delete-icon"
+          (click)="onDeleteCategory(cat.id)"
+          title="Delete Custom Category">
+
+          &times;
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- Add Category -->
+
+    <div class="form-strip">
+
+      <h3>
+        Add New Category
+      </h3>
+
+
+      <form
+        [formGroup]="categoryForm"
+        (ngSubmit)="onAddCategory()"
+        class="row g-3 align-items-end">
+
+
+        <div class="col-md-6">
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="Category Name">
+
+        </div>
+
+
+        <div class="col-md-4">
+
+          <select
+            class="form-select"
+            formControlName="type">
+
+            <option value="EXPENSE">
+              Expense (Outflow)
+            </option>
+
+            <option value="INCOME">
+              Income (Inflow)
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="col-md-2">
+
+          <button
+            type="submit"
+            class="btn btn-primary w-100"
+            [disabled]="categoryForm.invalid">
+
+            Create Category
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </section>
+
+</div>
